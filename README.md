@@ -66,13 +66,15 @@ We use a dedicated VPC for our project, associate restrictive security groups to
 
 ### Disaster Recovery
 Sync wordpress files to the S3 code bucket.
+
 RDS service gives you automatic backups of the Database
 
 
-What could be done better:
+### What could be done better:
 
 	- There is still a little manual work for the monitoring
 	- Separate the terraform in different reusable modules
 	- Use terragrunt as a wrapper
-	
+	- Store the terraform state on S3 and locks in DB
+	- Use AWS IAM Roles for additional layer
 	
