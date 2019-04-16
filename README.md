@@ -4,6 +4,8 @@ Here we will build the Infrastructure for Highly-Available WordPress website ove
 
 We’ll use the Terraform to create the fully operational AWS VPC infrastructure(subnets,routeing tables,igw etc), it will also create everything that need to be for creating EC2 and RDS instances (security key, security group, subnet group). It will also create the Elastic Load Balancer and add the EC2 instance(s) automatically to it.
 
+### Why terraform - all the benefits using infrastructure-as-code. Rich documentations and cloud(aws) native.
+
 ### Requirements:
 
 	- Terraform
