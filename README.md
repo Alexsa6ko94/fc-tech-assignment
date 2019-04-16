@@ -22,7 +22,7 @@ Clone this repo
 git clone https://github.com/Alexsa6ko94/fc-tech-assignment.git
 cd fc-tech-assignment/aws-terraform
 ```
-Rename the file called terraform.tfvars-sample into the terraform.tfvars and change the values as per your requirement:
+Rename the file called terraform.tfvars.sample into the terraform.tfvars and change the values as per your requirement:
 ```bash
 mv terraform.tfvars-sample terraform.tfvars
 ```
