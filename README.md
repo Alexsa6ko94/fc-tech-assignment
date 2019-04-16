@@ -4,7 +4,8 @@ Here we will build the Infrastructure for Highly-Available WordPress website ove
 
 We’ll use the Terraform to create the fully operational AWS VPC infrastructure(subnets,routeing tables,igw etc), it will also create everything that need to be for creating EC2 and RDS instances (security key, security group, subnet group). It will also create the Elastic Load Balancer and add the EC2 instance(s) automatically to it.
 
-Requirements:
+### Requirements:
+
 	- Terraform
 	- Ansible
 	- AWS admin access
@@ -40,7 +41,7 @@ Here is an infrastructure diagram.
 
 ![ECS infra](img/Arch_Diagram.jpeg)
 
-Terraform will:
+### Terraform will:
 
 	- Create  VPC with 6 x VPC subnets(2 x public, 4 x private) in different AZ zones inside the AWS region
 	- Create the AWS key pair with the provided public key
@@ -51,25 +52,27 @@ Terraform will:
 	- Register EC2 instances on ELB
 	- It will bake AMI from dev instance that will be used by the autoscaling group
 	
-Ansible will:
+### Ansible will:
 	
 	- Install and configure the Wordpress, nginx, nagios, kibana, ELK
 	- Install and configure nginx 
 
 
-High Availability
+### High Availability
 To achieve HA we'll span our autoscaling group in two different availability zones. 
 
-Security
+### Security
 We use a dedicated VPC for our project, associate restrictive security groups to instances and put our EC2 instances, DB services in private subnets. SSH access to the EC2 instances only from The Bastion instance. We have additinal instance for Monitoring. Connection to the DB can originate only from the Webserver.
 
-Disaster Recovery
+### Disaster Recovery
 Sync wordpress files to the S3 code bucket.
 RDS service gives you automatic backups of the Database
 
 
 What could be done better:
+
 	- There is still a little manual work for the monitoring
 	- Separate the terraform in different reusable modules
 	- Use terragrunt as a wrapper
+	
 	
