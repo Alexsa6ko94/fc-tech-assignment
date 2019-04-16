@@ -197,12 +197,12 @@ resource "aws_iam_role_policy" "s3_policy" {
   name = "s3_access_policy"
   role = "${aws_iam_role.s3_role.id}"
  
-  policy = "${file("../user_data/s3_policy.json")}"
+  policy = "${file("user_data/s3_policy.json")}"
 }
 
 resource "aws_iam_role" "s3_role" {
   name = "s3_role"
-  assume_role_policy = "${file("../user_data/s3_assume_role.json")}"
+  assume_role_policy = "${file("user_data/s3_assume_role.json")}"
 }
 
 
@@ -224,7 +224,7 @@ resource "aws_launch_configuration" "wp_launch_config" {
   security_groups = ["${var.app_sg}"]
   associate_public_ip_address = false
   ebs_optimized = false
-  user_data = "${file("userdata")}"
+  user_data = "${file("user_data/ami_userdata")}"
   iam_instance_profile = "${aws_iam_instance_profile.s3_profile.id}"
   root_block_device {
     volume_type = "gp2"

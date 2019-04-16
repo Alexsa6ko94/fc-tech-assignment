@@ -195,7 +195,7 @@ resource "aws_vpc_endpoint" "s3_endpoint" {
   vpc_id = "${aws_vpc.wp_vpc.id}"
   service_name = "com.amazonaws.${var.region}.s3"
 
-  policy = "${file("../user_data/s3_endpoint_policy.json")}" 
+  policy = "${file("user_data/s3_endpoint_policy.json")}" 
 
 }
 
