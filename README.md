@@ -83,4 +83,5 @@ ELK Kibana and Nagios
 	- Use terragrunt as a wrapper
 	- Store the terraform state on S3 and locks in DB
 	- Use AWS IAM Roles for additional layer
+	- Add more security - VPN, OSSEC etc..
 	
