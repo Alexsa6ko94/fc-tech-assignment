@@ -11,7 +11,7 @@ db_subnet_cidrs=["", ""]
 access_ip=""
 #The name of the SSH key
 key_name=""
-#Path to the key E.g. ~/.ssh/id_rsa.pub 
+#Path to the SSH key you would like to use E.g. ~/.ssh/id_rsa.pub 
 public_key_path=""
 #The type of the AWS instance to be used for EC2 E.g. "t2.micro"
 dev_instance_type=""
