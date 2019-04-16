@@ -71,7 +71,10 @@ Sync wordpress files to the S3 code bucket.
 
 RDS service gives you automatic backups of the Database
 
-### !!! During to t2.micro instance limitations - the ELK and Kibana can't work properly, so the Kibana is currently stopped.
+### Monitoring
+!!! During to t2.micro instance limitations - the ELK and Kibana can't work properly, so the Kibana is currently stopped.
+
+ELK Kibana and Nagios
 
 ### What could be done better:
 
