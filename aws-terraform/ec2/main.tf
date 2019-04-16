@@ -38,7 +38,19 @@ resource "aws_instance" "development" {
   }
 }
 
-############ Execute ansible playbook to set up the wordpress ################
+resource "aws_instance" "support" {
+  ami = "${data.aws_ami.dev_server.id}"
+  instance_type = "${var.dev_instance_type}"
+  key_name               = "${aws_key_pair.ssh_key_pair.id}"
+  vpc_security_group_ids = ["${var.dev_sg}"]
+  subnet_id              = "${var.dev_subnet}"
+  associate_public_ip_address = true
+  tags {
+    Name = "Support instance"
+  }
+}
+
+############ Execute ansible playbook to set up wordpress blog  ################
 resource "null_resource" "ansible_host_file" {
   depends_on = ["aws_instance.development"]
   provisioner "local-exec" {
@@ -62,6 +74,14 @@ resource "null_resource" "ansible_wp_deploy" {
     command = "ansible-playbook -i ${aws_instance.development.public_ip}, ../../ansible-playbooks/wordpress_install.yml --extra-vars 'db_host=${aws_db_instance.wp_database.address} db_password=${var.db_root_password} db_name=${var.db_name}' && ansible-playbook -i ${aws_instance.development.public_ip}, ../../ansible-playbooks/s3_playbook.yml --extra-vars 'bucket_name=${aws_s3_bucket.code_bucket.id}'"
   }
 }
+
+resource "null_resource" "nagios_deploy" {
+  depends_on = ["aws_instance.support","null_resource.wait","aws_db_instance.wp_database"]
+  provisioner "local-exec" {
+    command = "ansible-playbook -i ${aws_instance.support.public_ip}, ../../ansible-playbooks/nagios_server.yml && ansible-playbook -i ${aws_instance.support.public_ip}, ../../ansible-playbooks/elastic.yml"
+  }
+}
+
 
 ############ S3 bucket creation ##############
 
@@ -119,6 +139,7 @@ resource "aws_db_instance" "wp_database" {
   skip_final_snapshot = true
 }
 
+## Uncomment if you want to Create DB replica 
 /*
 resource "aws_db_instance" "replica_wp_database" {
   allocated_storage = "${var.db_storage_space}"
@@ -186,7 +207,13 @@ resource "aws_iam_role" "s3_role" {
 
 
 
-########## Create Autoscaling group  ################
+########## Create Autoscaling group  ################ 
+
+##### Placement group can not be used with instance type t2.micro
+#resource "aws_placement_group" "wp_pg" {
+#  name = "wordpress_placement_group"
+#  strategy = "cluster"
+#}
 
 resource "aws_launch_configuration" "wp_launch_config" {
   depends_on = ["aws_ami_from_instance.wp_ami"]
@@ -197,7 +224,7 @@ resource "aws_launch_configuration" "wp_launch_config" {
   security_groups = ["${var.app_sg}"]
   associate_public_ip_address = false
   ebs_optimized = false
-  user_data = "${file("../user_data/ami_userdata")}"
+  user_data = "${file("userdata")}"
   iam_instance_profile = "${aws_iam_instance_profile.s3_profile.id}"
   root_block_device {
     volume_type = "gp2"
@@ -206,6 +233,7 @@ resource "aws_launch_configuration" "wp_launch_config" {
 }
 
 resource "aws_autoscaling_group" "wp_ag" {
+#  placement_group = "${aws_placement_group.wp_pg.id}"
   vpc_zone_identifier = ["${var.app_subnet}"]
   max_size = "${var.ag_max}"
   min_size = "${var.ag_min}"

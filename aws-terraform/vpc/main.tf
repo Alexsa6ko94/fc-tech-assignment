@@ -106,6 +106,7 @@ resource "aws_route_table_association" "db_private_association" {
   route_table_id  = "${aws_route_table.private.id}"
 }
 
+
 ########## Security groups definitions ################
 
 
@@ -194,18 +195,8 @@ resource "aws_vpc_endpoint" "s3_endpoint" {
   vpc_id = "${aws_vpc.wp_vpc.id}"
   service_name = "com.amazonaws.${var.region}.s3"
 
-  policy = <<POLICY
-{
-    "Statement": [
-        {
-            "Action": "*",
-            "Effect": "Allow",
-            "Resource": "*",
-            "Principal": "*"
-        }
-    ]
-}
-POLICY
+  policy = "${file("../user_data/s3_endpoint_policy.json")}" 
+
 }
 
 resource "aws_vpc_endpoint_route_table_association" "private_s3" {
@@ -217,5 +208,3 @@ resource "aws_vpc_endpoint_route_table_association" "public_s3" {
   vpc_endpoint_id = "${aws_vpc_endpoint.s3_endpoint.id}"
   route_table_id = "${aws_route_table.public.id}"
 }
-
-

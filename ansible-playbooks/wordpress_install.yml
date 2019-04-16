@@ -42,21 +42,60 @@
     - shell: sed -i "s/'localhost'/'"{{ db_host }}"'/" /var/www/html/wp-config.php
     - name: Vhost creation
       template:
-        src: basic-vhost-file
+        src: nginx-configs/website
         dest: /etc/nginx/conf.d/website.conf
         owner: nginx
         group: nginx
         mode: 0644
     - template:
-        src: wordpress.conf
+        src: nginx-configs/wordpress.conf
         dest: /etc/nginx/wordpress.conf
         owner: nginx
         group: nginx
         mode: 0644
     - template:
-        src: limits.conf
+        src: nginx-configs/limits.conf
         dest: /etc/nginx/limits.conf
         owner: nginx
         group: nginx
         mode: 0644
     - shell: nginx -s reload
+    - name: Install nrpe client and nagios plugins
+      shell: amazon-linux-extras install epel -y
+    - shell: yum install nagios-plugins-all nagios-plugins-nrpe nrpe -y
+    - template:
+        src: files/nrpe.cfg
+        dest: /etc/nagios/nrpe.cfg
+        owner: root
+        group: root
+    - template:
+        src: files/check_mem.pl
+        dest: /usr/lib64/nagios/plugins/check_mem.pl
+        owner: root
+        group: root
+        mode: 0755
+    - template:
+        src: files/check_linux_stats.pl
+        dest: /usr/lib64/nagios/plugins/check_linux_stats.pl
+        owner: root
+        group: root
+        mode: 0755
+    - template:
+        src: files/perl-Sys-Statistics-Linux-0.66-14.el7.noarch.rpm
+        dest: /root/perl-Sys-Statistics-Linux-0.66-14.el7.noarch.rpm
+        owner: root
+        group: root
+        mode: 0644
+    - shell: rpm -Uvh /root/perl-Sys-Statistics-Linux-0.66-14.el7.noarch.rpm
+    - service: name=nrpe state=restarted enabled=yes
+    - file:
+        path: /tmp/downloads
+        state: directory
+    - name: Instal filebeat for log aggregation
+      shell: curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.0.0-x86_64.rpm && rpm -vi filebeat-7.0.0-x86_64.rpm
+      args:
+        chdir: /tmp/downloads
+    - template:
+        src: files/filebeat.yml
+        dest: /etc/filebeat/filebeat.yml
+    - service: name=filebeat state=restarted enabled=yes

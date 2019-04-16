@@ -1,0 +1,37 @@
+####### Variable values #########
+
+#AWS Region where you want the infra to be build E.g. "eu-west-1"
+region=""
+#CIDR ranges for our VPC and subnets
+vpc_cidr=""
+public_subnet_cidrs=["", ""]
+private_subnet_cidrs=["", ""]
+db_subnet_cidrs=["", ""]
+#The IP Addrress from where you want to be able to connect to the instance
+access_ip=""
+#The name of the SSH key
+key_name=""
+#Path to the key E.g. ~/.ssh/id_rsa.pub 
+public_key_path=""
+#The type of the AWS instance to be used for EC2 E.g. "t2.micro"
+dev_instance_type=""
+app_volume_size=
+#The autoscaling group minimun desired number
+ag_min=
+#The autoscaling group maximum desired number
+ag_max=
+#The type of the AWS instance to be used for EC2 E.g. "t2.micro"
+app_instance_type=""
+#The space in GBs for the DB
+db_storage_space = 
+#The RDS engine E.g. "mysql"
+db_engine = ""
+#The RDS engine version E.g. "5.6.40"
+db_engine_version = ""
+#The type of the RDS instances E.g. "db.t2.micro"
+db_instance_type = ""
+db_name = ""
+db_root_password = ""
+db_backup_period = 
+#The name of the S3 bucket
+bucket_name = ""
