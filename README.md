@@ -37,11 +37,24 @@ To builds or makes actual changes in infrastructure:
 terraform apply
 ```
 To destroy Terraform-managed infrastructure:
+```bash
 terraform destroy
+```
 
 Here is an infrastructure diagram.
 
 ![ECS infra](img/Arch_Diagram.jpeg)
+
+### Explaining the flow:
+
+	1. Terraform will create the Dev instance, that will be later be used as Bastion jump host and Ansible will isntall and configure wordpress on it.
+	2. Then it will bake AWS AMI from the Dev instance that will be used as launch configuration for the autoscaling group
+		2.1. Why we need AMI? - we need our own AMI, so when the autoscaling spin up another wordpress instance, the AMI will have already every component configured.(wordpress, log drivers etc.)
+	3. From that AMI it will spin up the wordpress instance.
+	4. ELB for publicly facing the internet and connect the wordpress to it.
+	5. It will create the Database - RDS
+	6. Also it will create an monitoring instance and again Ansible will configure the monitoring tools - nagios, kibana
+	
 
 ### Terraform will:
 
