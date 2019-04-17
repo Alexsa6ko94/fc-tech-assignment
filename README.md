@@ -87,7 +87,7 @@ RDS service gives you automatic backups of the Database.
 The Autoscaling will spin up another wordpress instance in another availavbility zone if the whole zone fail
 
 ### Monitoring
-!!! During to t2.micro instance limitations - the ELK and Kibana can't work properly, so the Kibana is currently stopped.
+!!! Due to t2.micro instance limitations - the ELK and Kibana can't work properly, so the Kibana is currently stopped.
 
 ELK Kibana and Nagios
 
