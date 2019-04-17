@@ -54,7 +54,7 @@ resource "aws_instance" "support" {
 resource "null_resource" "ansible_host_file" {
   depends_on = ["aws_instance.development"]
   provisioner "local-exec" {
-    command = "echo '${aws_instance.development.public_ip} ansible_ssh_user=ec2-user' >> ../../ansible-playbooks/hosts"
+    command = "echo '${aws_instance.development.public_ip} ansible_ssh_user=ec2-user' >> ../ansible-playbooks/hosts"
   }
 }
 
@@ -71,14 +71,14 @@ resource "null_resource" "wait" {
 resource "null_resource" "ansible_wp_deploy" {
   depends_on = ["aws_instance.development","null_resource.wait","aws_db_instance.wp_database"]
   provisioner "local-exec" {
-    command = "ansible-playbook -i ${aws_instance.development.public_ip}, ../../ansible-playbooks/wordpress_install.yml --extra-vars 'db_host=${aws_db_instance.wp_database.address} db_password=${var.db_root_password} db_name=${var.db_name}' && ansible-playbook -i ${aws_instance.development.public_ip}, ../../ansible-playbooks/s3_playbook.yml --extra-vars 'bucket_name=${aws_s3_bucket.code_bucket.id}'"
+    command = "ansible-playbook -i ${aws_instance.development.public_ip}, ../ansible-playbooks/wordpress_install.yml --extra-vars 'db_host=${aws_db_instance.wp_database.address} db_password=${var.db_root_password} db_name=${var.db_name}' && ansible-playbook -i ${aws_instance.development.public_ip}, ../ansible-playbooks/s3_playbook.yml --extra-vars 'bucket_name=${aws_s3_bucket.code_bucket.id}'"
   }
 }
 
 resource "null_resource" "nagios_deploy" {
   depends_on = ["aws_instance.support","null_resource.wait","aws_db_instance.wp_database"]
   provisioner "local-exec" {
-    command = "ansible-playbook -i ${aws_instance.support.public_ip}, ../../ansible-playbooks/nagios_server.yml && ansible-playbook -i ${aws_instance.support.public_ip}, ../../ansible-playbooks/elastic.yml"
+    command = "ansible-playbook -i ${aws_instance.support.public_ip}, ../ansible-playbooks/nagios_server.yml && ansible-playbook -i ${aws_instance.support.public_ip}, ../ansible-playbooks/elastic.yml"
   }
 }
 
