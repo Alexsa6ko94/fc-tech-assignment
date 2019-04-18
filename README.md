@@ -62,16 +62,14 @@ Here is an infrastructure diagram.
 	- Create the AWS key pair with the provided public key
 	- Create 1 x security group for each(Bastion, Webservers, RDS and ELB)
 	- Provision 3 x EC2 instances: Bastion/dev, Webserver and Monitoring instance
-	- Provision 1 x RDS instance in private subnets / Optionally can launch and RDS replica
+	- Provision 1 x RDS instance in private subnets / Optionally can launch RDS replica as well
 	- Launch and configure public facing VPC ELB (cross_az_load_balancing) and attach VPC subnets
 	- Register EC2 instances on ELB
 	- It will bake AMI from dev instance that will be used by the autoscaling group
 	
 ### Ansible will:
 	
-	- Install and configure the Wordpress, nginx, nagios, kibana, ELK
-	- Install and configure nginx 
-
+	- Install and configure the Wordpress, nginx, nagios, kibana, ELK on the instances
 
 ### High Availability
 To achieve HA we'll span our autoscaling group in two different availability zones. 
